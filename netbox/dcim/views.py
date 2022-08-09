@@ -2762,6 +2762,7 @@ class PathTraceView(generic.ObjectView):
         return super().dispatch(request, *args, **kwargs)
 
     def get_extra_context(self, request, instance):
+        from dcim.utils import dynamic_path
         related_paths = []
 
         # If tracing a PathEndpoint, locate the CablePath (if one exists) by its origin
@@ -2780,6 +2781,10 @@ class PathTraceView(generic.ObjectView):
                 path = CablePath.objects.get(pk=path_id)
             else:
                 path = related_paths.first()
+
+        # Try to resolve non-connected port on the fly
+        if path is None and (isinstance(instance, FrontPort) or isinstance(instance, RearPort)):
+            path = dynamic_path(instance)
 
         # No paths found
         if path is None:

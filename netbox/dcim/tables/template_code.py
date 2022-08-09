@@ -296,8 +296,8 @@ FRONTPORT_BUTTONS = """
     <i class="mdi mdi-plus-thick" aria-hidden="true"></i>
   </a>
 {% endif %}
-{% if record.cable %}
     <a href="{% url 'dcim:frontport_trace' pk=record.pk %}" class="btn btn-primary btn-sm" title="Trace"><i class="mdi mdi-transit-connection-variant"></i></a>
+{% if record.cable %}
     {% include 'dcim/inc/cable_toggle_buttons.html' with cable=record.cable %}
     {% if perms.dcim.delete_cable %}
         <a href="{% url 'dcim:cable_delete' pk=record.cable.pk %}?return_url={% url 'dcim:device_frontports' pk=object.pk %}" title="Remove cable" class="btn btn-danger btn-sm">

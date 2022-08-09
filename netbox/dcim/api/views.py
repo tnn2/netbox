@@ -100,6 +100,28 @@ class PassThroughPortMixin(object):
 
         return Response(serializer.data)
 
+    @action(detail=True, url_path='trace')
+    def trace(self, request, pk):
+        """
+        Trace a partial cable path and return each segment as a three-tuple of (termination, cable, termination).
+        """
+        obj = get_object_or_404(self.queryset, pk=pk)
+
+        if request.GET.get('render', None) == 'svg':
+            # Render SVG
+            try:
+                width = min(int(request.GET.get('width')), 1600)
+            except (ValueError, TypeError):
+                width = None
+            drawing = obj.get_trace_svg(
+                base_url=request.build_absolute_uri('/'),
+                width=width
+            )
+
+            return HttpResponse(drawing.tostring(), content_type='image/svg+xml')
+        # fixme non-svg API?
+        raise Http500('not implemented')
+
 
 #
 # Regions

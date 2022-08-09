@@ -849,6 +849,19 @@ class FrontPort(ModularComponentModel, LinkTermination):
                                       f"{self.rear_port.name} has only {self.rear_port.positions} positions"
             })
 
+    def trace(self):
+        from dcim.utils import dynamic_path
+        path = dynamic_path(self).get_path()
+        while len(path) % 3:
+            path.append(None)
+        return list(zip(*[iter(path)] * 3))
+
+    def get_trace_svg(self, base_url=None, width=None):
+        if width is not None:
+            trace = CableTraceSVG(self, base_url=base_url, width=width)
+        else:
+            trace = CableTraceSVG(self, base_url=base_url)
+        return trace.render()
 
 class RearPort(ModularComponentModel, LinkTermination):
     """
@@ -888,6 +901,19 @@ class RearPort(ModularComponentModel, LinkTermination):
                              f"({frontport_count})"
             })
 
+    def trace(self):
+        from dcim.utils import dynamic_path
+        path = dynamic_path(self).get_path()
+        while len(path) % 3:
+            path.append(None)
+        return list(zip(*[iter(path)] * 3))
+
+    def get_trace_svg(self, base_url=None, width=None):
+        if width is not None:
+            trace = CableTraceSVG(self, base_url=base_url, width=width)
+        else:
+            trace = CableTraceSVG(self, base_url=base_url)
+        return trace.render()
 
 #
 # Bays
